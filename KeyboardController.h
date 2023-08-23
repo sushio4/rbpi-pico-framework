@@ -24,7 +24,7 @@ private:
 public:
 
     inline bool isEmpty() {return begin == end;}
-    inline bool isFull() {return (begin + 127) % 128 == end; }
+    inline bool isFull() {return (end + 1) % 128 == begin; }
     
     bool push(KeyboardEvent e) 
     {
@@ -197,10 +197,10 @@ void KeyboardController::listenerFunction()
             {
                 if(gpio_get(inpins[in])) newkbstate |= 1 << offset;
                 //check if it's changed
-                if(newkbstate & (1<<offset) != kbstate & (1<<offset))
+                if(newkbstate & (1<<(uint32_t)offset) != kbstate & (1<<(uint32_t)offset))
                 {
                     KeyboardEvent e;
-                    if(newkbstate & (1<<offset)) e.type = Pressed;
+                    if(newkbstate & (1<<(uint32_t)offset)) e.type = Pressed;
                     else e.type = Released;
 
                     e.code = in | (out << 3);
