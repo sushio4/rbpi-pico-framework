@@ -206,6 +206,7 @@ void KeyboardController::listenerFunction()
                     e.code = in | (out << 3);
 
                     queue.push(e);
+                    sleep_us(50);
                 }
 
                 offset++;
