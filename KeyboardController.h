@@ -41,6 +41,10 @@ public:
         begin = (begin + 1) % 128;
         return res;
     }
+
+    inline void clear() {
+        begin = end = 0;
+    }
 };
 
 class KeyboardController 
@@ -70,6 +74,10 @@ public:
     {
         return !queue.isEmpty();
     }
+    inline void clearEvents() {
+        queue.clear();
+    }
+
     inline bool* getKeys()
     {
         return keys;
@@ -195,31 +203,29 @@ void KeyboardController::listenerFunction()
 
             for(uint8_t in = 0; in < 5; in++)
             {
-                if(gpio_get(inpins[in])) newkbstate |= 1 << offset;
+                if(keys[out*5+in] = gpio_get(inpins[in])) newkbstate += (1 << offset);
                 //check if it's changed
-                if(newkbstate & (1<<(uint32_t)offset) != kbstate & (1<<(uint32_t)offset))
+                if((newkbstate & (1 << offset)) != (kbstate & (1 << offset)))
                 {
                     KeyboardEvent e;
-                    if(newkbstate & (1<<(uint32_t)offset)) e.type = Pressed;
-                    else e.type = Released;
+                    if(newkbstate & (1 << offset)) 
+                        e.type = Pressed;
+                    else 
+                        e.type = Released;
 
                     e.code = in | (out << 3);
 
                     queue.push(e);
-                    sleep_us(50);
                 }
 
                 offset++;
+                sleep_us(100);
             }
 
             gpio_put(outpins[out], false);
             offset += 3;
+            sleep_us(100);
         }
         kbstate = newkbstate;
-
-        gpio_put(outpins[0], true);
-        gpio_put(outpins[1], true);
-        gpio_put(outpins[2], true);
-        gpio_put(outpins[3], true);
     }
 }
