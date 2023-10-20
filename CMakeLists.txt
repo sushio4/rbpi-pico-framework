@@ -13,6 +13,7 @@ add_executable(test
     Fonts.cpp
     TextRender.cpp
     Render.cpp
+    Util.cpp
 )
 
 pico_add_extra_outputs(test)
