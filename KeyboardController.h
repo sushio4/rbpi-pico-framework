@@ -203,7 +203,17 @@ void KeyboardController::listenerFunction()
 
             for(uint8_t in = 0; in < 5; in++)
             {
-                if(keys[out*5+in] = gpio_get(inpins[in])) newkbstate += (1 << offset);
+                uint8_t n = 0;
+                n += gpio_get(inpins[in]);
+                n += gpio_get(inpins[in]);
+                n += gpio_get(inpins[in]);
+                n += gpio_get(inpins[in]);
+                n += gpio_get(inpins[in]);
+
+                if(n >= 4) {
+                    newkbstate += (1 << offset);
+                    keys[out*5+in] = 1;
+                }
                 //check if it's changed
                 if((newkbstate & (1 << offset)) != (kbstate & (1 << offset)))
                 {
